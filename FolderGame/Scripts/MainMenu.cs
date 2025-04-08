@@ -14,7 +14,7 @@ public class MainMenu : MonoBehaviour, IMainMenu
     // Chuyển đến màn chơi
     public void PlayGame()
     {
-        SceneManager.LoadScene("GameScene"); // Đảm bảo "GameScene" đã có trong Build Settings.
+        SceneManager.LoadScene("level1"); // Đảm bảo "GameScene" đã có trong Build Settings.
     }
 
     // Chuyển đến màn hướng dẫn
@@ -35,4 +35,5 @@ public class MainMenu : MonoBehaviour, IMainMenu
         Application.Quit(); // Thoát game
         Debug.Log("Game Closed");
     }
+    
 }

@@ -1,0 +1,10 @@
+ARM|0|0|H|It’s attached to your shoulder
+MAP|2|0|V|Helps you find your way
+PLANT|2|2|H|Needs water and sunlight to grow
+NONE|5|0|V|Not a single one
+LAND|3|2|V|Opposite of sea
+DEW|3|5|H|Morning moisture on grass
+WORK|5|5|V|What you do to earn or create
+WRITE|4|7|H|Put words on paper
+VINE|8|4|V|Climbing plant with long stems
+ROCK|2|8|H|Hard part of the earth

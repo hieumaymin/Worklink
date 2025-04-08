@@ -1,0 +1,10 @@
+CAR|0|3|V|A type of vehicle
+CITY|0|3|H|A large place with buildings
+TIME|2|3|V|What a clock tells
+YET|1|6|H|Not now
+AWAY|3|0|V|The opposite of 'near'
+WHERE|3|1|H|Asking for location
+WENT|5|0|V|Past tense of 'go'
+TRIP|5|3|H|A short vacation
+PARK|8|3|V|Outdoor recreation area
+PACK|5|6|H|Carry-on item
