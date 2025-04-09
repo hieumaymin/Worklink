@@ -29,24 +29,20 @@ public class GridManager : MonoBehaviour
     public TextMeshProUGUI resultText;
     public Transform hintPanel;
     public GameObject hintTextPrefab;
-    public string levelFileName = "level1"; // Without .txt extension
+    public string levelFileName = "level1";
 
-    public GameObject nextLevelButton; // 🔁 Button shown after all words are guessed
-
+    public GameObject nextLevelButton;
     public int gridSizeX = 9;
     public int gridSizeY = 9;
-
     public RetryManager retryManager;
 
-    private Dictionary<string, List<LetterTileData>> wordTileMap = new Dictionary<string, List<LetterTileData>>();
-    private Dictionary<Vector2Int, GameObject> tileMap = new Dictionary<Vector2Int, GameObject>();
-
+    private Dictionary<string, List<LetterTileData>> wordTileMap = new();
+    private Dictionary<Vector2Int, GameObject> tileMap = new();
     private char[,] grid;
-    private List<WordData> wordDataList = new List<WordData>();
-    private List<string> validWords = new List<string>();
-    private List<string> wordHints = new List<string>();
-
-    private HashSet<string> guessedWords = new HashSet<string>(); // 🔁 Tracks correct words
+    private List<WordData> wordDataList = new();
+    private List<string> validWords = new();
+    private List<string> wordHints = new();
+    private HashSet<string> guessedWords = new();
 
     void Start()
     {
@@ -57,7 +53,7 @@ public class GridManager : MonoBehaviour
 
         if (nextLevelButton != null)
         {
-            nextLevelButton.SetActive(false); // 🔁 Hide next level button initially
+            nextLevelButton.SetActive(false);
         }
     }
 
@@ -77,7 +73,7 @@ public class GridManager : MonoBehaviour
             string[] parts = line.Trim().Split('|');
             if (parts.Length != 5) continue;
 
-            WordData data = new WordData
+            WordData data = new()
             {
                 word = parts[0].Trim().ToUpper(),
                 startX = int.Parse(parts[1]),
@@ -118,14 +114,13 @@ public class GridManager : MonoBehaviour
         {
             for (int x = 0; x < gridSizeX; x++)
             {
-                Vector2Int pos = new Vector2Int(x, y);
+                Vector2Int pos = new(x, y);
                 GameObject tile = Instantiate(letterTilePrefab, gridContainer);
                 tile.name = $"Tile_{x}_{y}";
                 tile.transform.localScale = Vector3.one;
 
                 TMP_Text text = tile.GetComponentInChildren<TMP_Text>();
                 Image bg = tile.GetComponent<Image>();
-
                 tileMap[pos] = tile;
 
                 if (grid[x, y] == '\0')
@@ -146,7 +141,7 @@ public class GridManager : MonoBehaviour
 
     void PlaceWord(string word, int startX, int startY, bool horizontal)
     {
-        List<LetterTileData> tileList = new List<LetterTileData>();
+        List<LetterTileData> tileList = new();
 
         for (int i = 0; i < word.Length; i++)
         {
@@ -161,7 +156,7 @@ public class GridManager : MonoBehaviour
 
             grid[x, y] = word[i];
 
-            Vector2Int pos = new Vector2Int(x, y);
+            Vector2Int pos = new(x, y);
             tileList.Add(new LetterTileData
             {
                 position = pos,
@@ -175,6 +170,13 @@ public class GridManager : MonoBehaviour
 
     public void CheckWord()
     {
+        if (retryManager.GetTriesLeft() <= 0)
+        {
+            resultText.text = "No more tries left!";
+            resultText.color = Color.gray;
+            return;
+        }
+
         string typed = answerInput.text.ToUpper().Trim();
         bool isCorrect = false;
 
@@ -222,10 +224,16 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    public void DisableInput()
+    {
+        answerInput.interactable = false;
+    }
+
     public void ResetGrid()
     {
         guessedWords.Clear();
         answerInput.text = "";
+        answerInput.interactable = true;
         resultText.text = "";
 
         foreach (Transform child in gridContainer)

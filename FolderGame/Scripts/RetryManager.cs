@@ -1,61 +1,64 @@
 using UnityEngine;
-using TMPro;  // Make sure to add this line
+using TMPro;
 using UnityEngine.UI;
 
 public class RetryManager : MonoBehaviour
 {
-    public Button tryAgainButton;  // Reference to the "Try again?" button
-    public GridManager gridManager; // Reference to the GridManager script
-    public int maxTries = 3; // Max number of tries allowed
-    private int currentTries = 0; // The current number of tries
+    public Button tryAgainButton;
+    public GridManager gridManager;
+    public int maxTries = 3;
+    private int currentTries = 0;
 
-    public TextMeshProUGUI remainingTriesText; // Reference to the TextMeshPro text that shows remaining tries
+    public TextMeshProUGUI remainingTriesText;
 
     void Start()
     {
-        // Ensure the "Try again?" button is hidden at the start
         tryAgainButton.gameObject.SetActive(false);
-
-        // Update the Remaining Tries Text at the start
         UpdateRemainingTriesText();
-
-        // Add listener for the Try again button
         tryAgainButton.onClick.AddListener(OnTryAgainButtonClicked);
     }
 
     public void CheckTries(bool isCorrect)
     {
+        if (currentTries >= maxTries) return;
+
         if (!isCorrect)
         {
             currentTries++;
-            UpdateRemainingTriesText(); // Update tries text
+            UpdateRemainingTriesText();
 
             if (currentTries >= maxTries)
             {
                 ShowTryAgainButton();
+                gridManager.DisableInput();
             }
         }
     }
 
     void UpdateRemainingTriesText()
     {
-        int remainingTries = maxTries - currentTries;
-        remainingTriesText.text = $"Tries left: {remainingTries}"; // Update the UI Text
+        int remainingTries = Mathf.Max(0, maxTries - currentTries);
+        remainingTriesText.text = $"Tries left: {remainingTries}";
     }
 
     void ShowTryAgainButton()
     {
-        tryAgainButton.gameObject.SetActive(true); // Show the retry button
+        tryAgainButton.gameObject.SetActive(true);
     }
 
     void OnTryAgainButtonClicked()
     {
-        currentTries = 0; // Reset the tries counter
-        tryAgainButton.gameObject.SetActive(false); // Hide the retry button
-
-        gridManager.ResetGrid(); // Call GenerateGrid method from GridManager to reset the puzzle
-        UpdateRemainingTriesText(); // Reset the remaining tries text after a retry
+        currentTries = 0;
+        tryAgainButton.gameObject.SetActive(false);
+        gridManager.ResetGrid();
+        UpdateRemainingTriesText();
     }
+
+    public int GetTriesLeft()
+    {
+        return Mathf.Max(0, maxTries - currentTries);
+    }
+
     public void RetryGame()
     {
         gridManager.ResetGrid();
